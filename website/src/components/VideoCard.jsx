@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './VideoCard.css'
 
 const STATUS_LABELS = {
@@ -10,6 +10,8 @@ const STATUS_LABELS = {
 
 export default function VideoCard({ video, index }) {
   const [hovered, setHovered] = useState(false)
+  const [playing, setPlaying] = useState(false)
+  const videoRef = useRef(null)
   const status = STATUS_LABELS[video.status] || STATUS_LABELS.processing
 
   const publishDate = video.published_at
@@ -20,34 +22,71 @@ export default function VideoCard({ video, index }) {
       })
     : null
 
+  function handlePlay() {
+    if (video.status !== 'published' || !video.video_url) return
+    setPlaying(true)
+  }
+
+  function handleVideoEnded() {
+    setPlaying(false)
+  }
+
+  function handleClose(e) {
+    e.stopPropagation()
+    setPlaying(false)
+    if (videoRef.current) {
+      videoRef.current.pause()
+      videoRef.current.currentTime = 0
+    }
+  }
+
   return (
     <article
-      className={`video-card ${hovered ? 'video-card--hovered' : ''}`}
+      className={`video-card ${hovered ? 'video-card--hovered' : ''} ${playing ? 'video-card--playing' : ''}`}
       style={{ animationDelay: `${index * 0.12}s` }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={handlePlay}
     >
-      {/* Thumbnail / placeholder */}
+      {/* Thumbnail / Video player */}
       <div className="video-card-thumb">
-        {video.thumbnail ? (
-          <img src={video.thumbnail} alt={video.title} className="video-card-img" />
+        {playing ? (
+          <div className="video-card-player">
+            <video
+              ref={videoRef}
+              src={video.video_url}
+              autoPlay
+              controls
+              onEnded={handleVideoEnded}
+              className="video-card-video"
+            />
+            <button className="video-card-close" onClick={handleClose} title="Close">
+              ✕
+            </button>
+          </div>
         ) : (
-          <div className="video-card-placeholder">
-            <span className="placeholder-icon">🍷</span>
-            <span className="placeholder-text">Preview Coming Soon</span>
-          </div>
-        )}
+          <>
+            {video.thumbnail ? (
+              <img src={video.thumbnail} alt={video.title} className="video-card-img" />
+            ) : (
+              <div className="video-card-placeholder">
+                <span className="placeholder-icon">🍷</span>
+                <span className="placeholder-text">Preview Coming Soon</span>
+              </div>
+            )}
 
-        {/* Status badge */}
-        <span className="video-card-status" style={{ background: status.color }}>
-          {status.icon} {status.text}
-        </span>
+            {/* Status badge */}
+            <span className="video-card-status" style={{ background: status.color }}>
+              {status.icon} {status.text}
+            </span>
 
-        {/* Play overlay on hover */}
-        {video.status === 'published' && (
-          <div className="video-card-play-overlay">
-            <span className="play-btn">▶</span>
-          </div>
+            {/* Play overlay on hover */}
+            {video.status === 'published' && (
+              <div className="video-card-play-overlay">
+                <span className="play-btn">▶</span>
+              </div>
+            )}
+          </>
         )}
       </div>
 

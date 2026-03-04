@@ -16,6 +16,36 @@ resource "aws_cloudfront_origin_access_control" "videos" {
   signing_protocol                  = "sigv4"
 }
 
+# CloudFront Origin Access Control for raw videos bucket (thumbnails)
+resource "aws_cloudfront_origin_access_control" "raw_videos" {
+  name                              = "garyeatsfloyd-raw-videos-oac"
+  description                       = "OAC for GaryEatsFloyd thumbnails"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
+# Response headers policy for video CORS
+resource "aws_cloudfront_response_headers_policy" "video_cors" {
+  name    = "garyeatsfloyd-video-cors"
+  comment = "CORS headers for video playback"
+
+  cors_config {
+    access_control_allow_credentials = false
+    access_control_allow_headers {
+      items = ["*"]
+    }
+    access_control_allow_methods {
+      items = ["GET", "HEAD", "OPTIONS"]
+    }
+    access_control_allow_origins {
+      items = ["https://${local.full_domain}"]
+    }
+    access_control_max_age_sec = 3600
+    origin_override            = true
+  }
+}
+
 # CloudFront Distribution
 resource "aws_cloudfront_distribution" "website" {
   enabled             = true
@@ -37,6 +67,13 @@ resource "aws_cloudfront_distribution" "website" {
     domain_name              = aws_s3_bucket.processed_videos.bucket_regional_domain_name
     origin_id                = "S3-Videos"
     origin_access_control_id = aws_cloudfront_origin_access_control.videos.id
+  }
+
+  # Raw videos bucket origin (thumbnails)
+  origin {
+    domain_name              = aws_s3_bucket.raw_videos.bucket_regional_domain_name
+    origin_id                = "S3-Thumbnails"
+    origin_access_control_id = aws_cloudfront_origin_access_control.raw_videos.id
   }
 
   # API Gateway origin
@@ -74,12 +111,36 @@ resource "aws_cloudfront_distribution" "website" {
 
   # Videos behavior
   ordered_cache_behavior {
-    path_pattern           = "/videos/*"
-    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "S3-Videos"
-    viewer_protocol_policy = "redirect-to-https"
-    compress               = true
+    path_pattern               = "/videos/*"
+    allowed_methods            = ["GET", "HEAD", "OPTIONS"]
+    cached_methods             = ["GET", "HEAD"]
+    target_origin_id           = "S3-Videos"
+    viewer_protocol_policy     = "redirect-to-https"
+    compress                   = true
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.video_cors.id
+
+    forwarded_values {
+      query_string = false
+      headers      = ["Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"]
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl     = 0
+    default_ttl = 86400
+    max_ttl     = 604800
+  }
+
+  # Thumbnails behavior
+  ordered_cache_behavior {
+    path_pattern               = "/thumbnails/*"
+    allowed_methods            = ["GET", "HEAD", "OPTIONS"]
+    cached_methods             = ["GET", "HEAD"]
+    target_origin_id           = "S3-Thumbnails"
+    viewer_protocol_policy     = "redirect-to-https"
+    compress                   = true
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.video_cors.id
 
     forwarded_values {
       query_string = false

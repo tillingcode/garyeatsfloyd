@@ -54,7 +54,7 @@ def format_video(item: dict) -> dict:
         "video_id": video_id,
         "title": item.get("title", "Untitled"),
         "description": item.get("summary", ""),
-        "thumbnail": item.get("thumbnail", ""),
+        "thumbnail": f"https://{CF_DOMAIN}/thumbnails/{video_id}.jpg",
         "video_url": f"https://{CF_DOMAIN}/videos/{video_id}.mp4",
         "status": item.get("status", "unknown"),
         "published_at": item.get("published_at", ""),

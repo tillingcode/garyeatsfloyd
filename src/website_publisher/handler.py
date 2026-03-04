@@ -95,7 +95,7 @@ def generate_videos_manifest(videos: list[dict]) -> dict:
             "video_id": v.get("video_id"),
             "title": v.get("title", "Untitled"),
             "description": v.get("summary", ""),
-            "thumbnail": v.get("thumbnail", ""),
+            "thumbnail": f"https://{DOMAIN}/thumbnails/{v['video_id']}.jpg",
             "video_url": f"https://{DOMAIN}/videos/{v['video_id']}.mp4",
             "status": "published",
             "published_at": v.get("published_at", ""),
