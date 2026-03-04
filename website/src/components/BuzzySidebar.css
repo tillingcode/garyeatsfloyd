@@ -1,0 +1,141 @@
+/* ─── Buzzy Sidebar ─── animated floating icons ──────────── */
+.buzzy-sidebar {
+  position: relative;
+  width: 120px;
+  min-height: 600px;
+  overflow: hidden;
+  flex-shrink: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Glowing edge strip */
+.buzzy-glow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--wine-light) 20%,
+    var(--gold) 50%,
+    var(--wine-light) 80%,
+    transparent 100%
+  );
+  opacity: 0.5;
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+.buzzy-sidebar--left .buzzy-glow {
+  right: 0;
+}
+
+.buzzy-sidebar--right .buzzy-glow {
+  left: 0;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.3; filter: blur(1px); }
+  50%      { opacity: 0.7; filter: blur(3px); }
+}
+
+/* ─── Floating icons ──────────────────────────────────────── */
+.buzzy-icon {
+  position: absolute;
+  will-change: transform;
+  filter: drop-shadow(0 0 6px rgba(255, 213, 79, 0.3));
+  z-index: 1;
+}
+
+.buzzy-icon--up {
+  bottom: -40px;
+  animation: buzzy-float-up linear infinite;
+}
+
+.buzzy-icon--down {
+  top: -40px;
+  animation: buzzy-float-down linear infinite;
+}
+
+@keyframes buzzy-float-up {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg) scale(0.5);
+    opacity: 0;
+  }
+  5% {
+    opacity: var(--target-opacity, 0.6);
+    transform: translateY(-30px) translateX(calc(var(--wobble) * -0.5)) rotate(15deg) scale(0.8);
+  }
+  25% {
+    transform: translateY(-150px) translateX(var(--wobble)) rotate(-10deg) scale(1);
+  }
+  50% {
+    transform: translateY(-350px) translateX(calc(var(--wobble) * -1)) rotate(20deg) scale(1.1);
+  }
+  75% {
+    transform: translateY(-500px) translateX(var(--wobble)) rotate(-15deg) scale(0.95);
+  }
+  95% {
+    opacity: var(--target-opacity, 0.6);
+  }
+  100% {
+    transform: translateY(-700px) translateX(0) rotate(360deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes buzzy-float-down {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg) scale(0.5);
+    opacity: 0;
+  }
+  5% {
+    opacity: var(--target-opacity, 0.6);
+    transform: translateY(30px) translateX(calc(var(--wobble) * 0.5)) rotate(-15deg) scale(0.8);
+  }
+  25% {
+    transform: translateY(150px) translateX(calc(var(--wobble) * -1)) rotate(10deg) scale(1);
+  }
+  50% {
+    transform: translateY(350px) translateX(var(--wobble)) rotate(-20deg) scale(1.1);
+  }
+  75% {
+    transform: translateY(500px) translateX(calc(var(--wobble) * -1)) rotate(15deg) scale(0.95);
+  }
+  95% {
+    opacity: var(--target-opacity, 0.6);
+  }
+  100% {
+    transform: translateY(700px) translateX(0) rotate(-360deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* ─── Pulsing accent at bottom ────────────────────────────── */
+.buzzy-accent {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.buzzy-accent-icon {
+  font-size: 2.5rem;
+  display: block;
+  animation: accent-bounce 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(139, 34, 82, 0.8));
+}
+
+@keyframes accent-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-12px) scale(1.15); }
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .buzzy-sidebar {
+    display: none;
+  }
+}

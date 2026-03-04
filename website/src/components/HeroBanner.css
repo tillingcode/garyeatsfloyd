@@ -1,0 +1,178 @@
+.hero {
+  position: relative;
+  padding: 5rem 2rem 4rem;
+  text-align: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(139, 34, 82, 0.4) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(255, 213, 79, 0.15) 0%, transparent 50%);
+}
+
+/* ─── Floating particles ─────────────────────────────────── */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-particle {
+  position: absolute;
+  bottom: -20px;
+  animation: float-up linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes float-up {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.7; }
+  90%  { opacity: 0.7; }
+  100% { transform: translateY(-500px) rotate(360deg); opacity: 0; }
+}
+
+/* ─── Content ─────────────────────────────────────────────── */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+.hero-line-1 {
+  display: block;
+  color: var(--cream);
+  animation: slide-in-left 0.8s ease-out;
+}
+
+.hero-line-2 {
+  display: block;
+  background: linear-gradient(90deg, var(--gold), var(--wine-light), var(--gold));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite, slide-in-right 0.8s ease-out 0.2s both;
+}
+
+.hero-line-3 {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--wine-blush);
+  animation: fade-in 1s ease-out 0.5s both;
+}
+
+.hero-line-3 em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+@keyframes shimmer {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes slide-in-left {
+  from { transform: translateX(-40px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(40px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(253, 246, 227, 0.75);
+  margin-bottom: 2rem;
+  animation: fade-in 1s ease-out 0.7s both;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────── */
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fade-in 1s ease-out 0.9s both;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--wine-light), var(--wine-mid));
+  color: var(--white);
+  box-shadow: 0 4px 20px rgba(194, 24, 91, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 30px rgba(194, 24, 91, 0.6);
+  color: var(--white);
+}
+
+.btn-outline {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: transparent;
+}
+
+.btn-outline:hover {
+  background: var(--gold);
+  color: var(--charcoal);
+  transform: translateY(-2px);
+}
+
+/* ─── Wine glass decoration ───────────────────────────────── */
+.hero-wine-glass {
+  position: absolute;
+  right: 5%;
+  bottom: 10%;
+  width: 100px;
+  opacity: 0.25;
+  animation: gentle-sway 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes gentle-sway {
+  0%, 100% { transform: rotate(-3deg) translateY(0); }
+  50%      { transform: rotate(3deg) translateY(-10px); }
+}
+
+.wine-glass-svg {
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .hero-title { font-size: 2.2rem; }
+  .hero-line-3 { font-size: 1.1rem; }
+  .hero { padding: 3rem 1rem 2.5rem; }
+  .hero-wine-glass { display: none; }
+}

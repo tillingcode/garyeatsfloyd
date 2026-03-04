@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^powershell -NoProfile -Command \"& \\{ Get-Content 'D:\\\\source\\\\garyeatsfloyd\\\\deploy\\.ps1' -Encoding UTF8 \\| Select-String '\\\\x\\{2014\\}\\|\\\\x\\{2013\\}' \\}\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

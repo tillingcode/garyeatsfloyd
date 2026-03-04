@@ -1,0 +1,103 @@
+.gallery {
+  padding-bottom: 3rem;
+}
+
+.gallery-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.gallery-title {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 0.75rem;
+  color: var(--cream);
+}
+
+.gallery-icon {
+  margin-right: 0.5rem;
+}
+
+.gallery-subtitle {
+  font-size: 1rem;
+  color: rgba(253, 246, 227, 0.6);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ─── Grid ────────────────────────────────────────────────── */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+/* ─── States ──────────────────────────────────────────────── */
+.gallery-loading {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.wine-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wine-loader-glass {
+  font-size: 3rem;
+  animation: pour 1.5s ease-in-out infinite;
+}
+
+@keyframes pour {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-30deg); }
+  75%      { transform: rotate(15deg); }
+}
+
+.wine-loader p {
+  color: var(--wine-blush);
+  font-style: italic;
+}
+
+.gallery-error {
+  text-align: center;
+  padding: 3rem;
+  background: rgba(139, 34, 82, 0.15);
+  border: 1px solid rgba(139, 34, 82, 0.3);
+  border-radius: 1rem;
+}
+
+.gallery-error-detail {
+  font-size: 0.85rem;
+  color: rgba(253, 246, 227, 0.5);
+  margin-top: 0.5rem;
+}
+
+.gallery-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.gallery-empty-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+  animation: gentle-sway 4s ease-in-out infinite;
+}
+
+@keyframes gentle-sway {
+  0%, 100% { transform: rotate(-5deg); }
+  50%      { transform: rotate(5deg); }
+}
+
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+  .gallery-title {
+    font-size: 1.5rem;
+  }
+}

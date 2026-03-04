@@ -1,0 +1,113 @@
+.footer {
+  margin-top: auto;
+  background: rgba(10, 10, 20, 0.6);
+  border-top: 1px solid var(--glass-border);
+  padding: 3rem 2rem 1.5rem;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-brand {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.footer-logo {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  color: var(--gold);
+}
+
+.footer-tagline {
+  font-style: italic;
+  color: rgba(253, 246, 227, 0.6);
+  line-height: 1.8;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.footer-attribution {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--wine-blush);
+}
+
+/* ─── Info columns ────────────────────────────────────────── */
+.footer-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.footer-col h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col li {
+  font-size: 0.88rem;
+  color: rgba(253, 246, 227, 0.55);
+  padding: 0.3rem 0;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.footer-col li::before {
+  content: '🍷';
+  position: absolute;
+  left: 0;
+  font-size: 0.7rem;
+}
+
+/* ─── Bottom bar ──────────────────────────────────────────── */
+.footer-bottom {
+  border-top: 1px solid var(--glass-border);
+  padding-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  color: rgba(253, 246, 227, 0.4);
+}
+
+.footer-wine-parade {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.footer-wine-icon {
+  font-size: 1.2rem;
+  animation: footer-bounce 2s ease-in-out infinite;
+}
+
+@keyframes footer-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+@media (max-width: 768px) {
+  .footer-info {
+    grid-template-columns: 1fr;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+}
