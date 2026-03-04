@@ -220,6 +220,13 @@ resource "aws_iam_role_policy" "video_processor" {
       {
         Effect = "Allow"
         Action = [
+          "polly:SynthesizeSpeech"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
           "lambda:InvokeFunction"
         ]
         Resource = aws_lambda_function.website_publisher.arn

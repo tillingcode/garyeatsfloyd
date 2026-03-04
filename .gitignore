@@ -14,6 +14,7 @@ tfplan
 # Build artifacts
 dist/
 src/layer/python/
+src/ffmpeg-layer/bin/ffmpeg
 website/dist/
 website/node_modules/
 

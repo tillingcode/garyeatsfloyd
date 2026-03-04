@@ -50,7 +50,7 @@ variable "keith_floyd_prompt" {
   description = "Prompt for video transformation"
   type        = string
   default     = <<-EOT
-    Keith Floyd 1980s British TV chef style: always holding red wine, witty and tipsy, mentions wine often, pairs dishes with wine.
+    British man in 1980s style reviewing food at a restaurant, charming and expressive, always holding a glass of red wine, reacting to dishes.
   EOT
 }
 

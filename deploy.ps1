@@ -219,6 +219,52 @@ function Invoke-Build {
         }
     }
 
+    # ── Download ffmpeg binary for Lambda (Linux x86_64) ──
+    $ffmpegLayerDir = Join-Path $SrcDir "ffmpeg-layer"
+    $ffmpegBinDir = Join-Path $ffmpegLayerDir "bin"
+    $ffmpegBin = Join-Path $ffmpegBinDir "ffmpeg"
+
+    if (-not (Test-Path $ffmpegBin)) {
+        Write-Step "Downloading ffmpeg binary for Lambda (Linux x86_64)"
+        New-Item -ItemType Directory -Path $ffmpegBinDir -Force | Out-Null
+
+        $tempDir = Join-Path $env:TEMP "ffmpeg-download-$(Get-Random)"
+        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+
+        try {
+            # Download the manylinux wheel which bundles a static Linux ffmpeg binary
+            Write-Host "  Downloading imageio-ffmpeg manylinux wheel..." -ForegroundColor DarkGray
+            pip download imageio-ffmpeg --platform manylinux2014_x86_64 --python-version 311 --only-binary=:all: -d $tempDir --no-deps --quiet
+            if ($LASTEXITCODE -ne 0) { Write-Error "Failed to download imageio-ffmpeg wheel" }
+
+            $whlFile = Get-ChildItem $tempDir -Filter "imageio_ffmpeg*.whl" | Select-Object -First 1
+            if (-not $whlFile) { Write-Error "No imageio-ffmpeg wheel found in $tempDir" }
+
+            # Use Python to extract the ffmpeg binary from the wheel (zipfile)
+            Write-Host "  Extracting ffmpeg binary from wheel..." -ForegroundColor DarkGray
+            $pyScript = @"
+import zipfile, shutil, os
+whl = r'$($whlFile.FullName)'
+out = r'$ffmpegBin'
+z = zipfile.ZipFile(whl)
+bins = [n for n in z.namelist() if 'binaries/ffmpeg' in n and z.getinfo(n).file_size > 1000000]
+if not bins:
+    raise RuntimeError('No ffmpeg binary found in wheel')
+with z.open(bins[0]) as f_in, open(out, 'wb') as f_out:
+    shutil.copyfileobj(f_in, f_out)
+print(f'Extracted {bins[0]} ({os.path.getsize(out) / 1048576:.1f} MB)')
+"@
+            python -c $pyScript
+            if ($LASTEXITCODE -ne 0) { Write-Error "Failed to extract ffmpeg from wheel" }
+
+            Write-Host "  ffmpeg downloaded to src/ffmpeg-layer/bin/ffmpeg" -ForegroundColor Green
+        } finally {
+            Remove-Item -Recurse -Force $tempDir -ErrorAction SilentlyContinue
+        }
+    } else {
+        Write-Host "  ffmpeg binary already present. Skipping download." -ForegroundColor Green
+    }
+
     # ── Validate function source dirs exist ──
     foreach ($fn in $LambdaFunctions) {
         $fnDir = Join-Path $SrcDir $fn

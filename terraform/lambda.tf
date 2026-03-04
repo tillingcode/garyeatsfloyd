@@ -7,6 +7,15 @@ resource "aws_lambda_layer_version" "dependencies" {
   description         = "Common dependencies for GaryEatsFloyd lambdas"
 }
 
+# Lambda Layer for ffmpeg static binary
+resource "aws_lambda_layer_version" "ffmpeg" {
+  filename            = data.archive_file.ffmpeg_layer.output_path
+  layer_name          = "garyeatsfloyd-ffmpeg"
+  compatible_runtimes = ["python3.11"]
+  source_code_hash    = data.archive_file.ffmpeg_layer.output_base64sha256
+  description         = "Static ffmpeg binary for video concatenation"
+}
+
 # YouTube Scanner Lambda
 resource "aws_lambda_function" "youtube_scanner" {
   filename         = data.archive_file.youtube_scanner.output_path
@@ -68,7 +77,10 @@ resource "aws_lambda_function" "video_processor" {
   timeout          = 900  # 15 minutes for processing
   memory_size      = 3008
 
-  layers = [aws_lambda_layer_version.dependencies.arn]
+  layers = [
+    aws_lambda_layer_version.dependencies.arn,
+    aws_lambda_layer_version.ffmpeg.arn,
+  ]
 
   environment {
     variables = {
@@ -191,6 +203,12 @@ data "archive_file" "video_processor" {
   type        = "zip"
   source_dir  = "${path.module}/../src/video_processor"
   output_path = "${path.module}/../dist/video_processor.zip"
+}
+
+data "archive_file" "ffmpeg_layer" {
+  type        = "zip"
+  source_dir  = "${path.module}/../src/ffmpeg-layer"
+  output_path = "${path.module}/../dist/ffmpeg_layer.zip"
 }
 
 data "archive_file" "api_handler" {
