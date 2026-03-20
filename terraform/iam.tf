@@ -230,6 +230,13 @@ resource "aws_iam_role_policy" "video_processor" {
           "lambda:InvokeFunction"
         ]
         Resource = aws_lambda_function.website_publisher.arn
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ]
+        Resource = aws_secretsmanager_secret.youtube_api_key.arn
       }
     ]
   })

@@ -92,6 +92,7 @@ resource "aws_lambda_function" "video_processor" {
       BEDROCK_MODEL_ID        = var.bedrock_model_id
       KEITH_FLOYD_PROMPT      = var.keith_floyd_prompt
       WEBSITE_PUBLISHER_FUNCTION = aws_lambda_function.website_publisher.function_name
+      YOUTUBE_API_KEY_SECRET  = aws_secretsmanager_secret.youtube_api_key.name
     }
   }
 
